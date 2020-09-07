@@ -17,6 +17,7 @@ client.on("ready", () => {
 client.on("message", message => {
     const args = message.content.substr(prefix.length).split(" ");
     if (!message.content.startsWith(prefix)) return;
+    if(message.author.bot){ return; }
 
     switch (args[0]) {
         case "ping":
@@ -125,6 +126,33 @@ client.on("message", message => {
                 message.channel.send("**Error:** Invalid Region (NA, EU, or ASIA)")
             }
     }
+})
+
+client.on("message", message => {
+    const args = message.content.toLowerCase();
+    if(message.author.bot){ return; }
+
+    function codeFeature(){
+            for (var i = 0; i < commandsList.length; i++) {
+                // this is unnessacary, fix this later.
+                if (commandsList[i].command == "code") {
+
+                    const usageUsageEmbed = new Discord.MessageEmbed()
+                        .setColor("#66B66E")
+                        .setTitle(`Usage of: ${commandsList[i].command}`)
+                        .setDescription(commandsList[i].usage)
+                        .setTimestamp()
+                        .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+                    message.channel.send(usageUsageEmbed);
+                }
+            }
+    }
+
+    if (args.includes("code is")){
+        message.channel.send("**Hey!** I have a feature for that!")
+        codeFeature();
+    }
+
 })
 
 client.login(token.token);
