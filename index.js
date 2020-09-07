@@ -40,7 +40,10 @@ client.on("message", message => {
                     message.channel.send(usageEmbed);
                 }
               }
-        break
+        break;
+
+        case "setup":
+            
     }
 })
 
