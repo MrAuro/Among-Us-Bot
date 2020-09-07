@@ -1,11 +1,14 @@
 [
     {
-        "command": "ping", "usage": "Get the delay to the bot."
+        "command": "ping", "usage": "`$ping`\nGet the delay to the bot."
     },
     {
-        "command": "help", "usage": "Gives help on the bot."
+        "command": "help", "usage": "`$help`\nGives help on the bot."
     },
     {
-        "command": "usage", "usage": "Gives the usage of a command."
+        "command": "usage", "usage": "`$usage {COMMAND}`\nGives the usage of a command."
+    },
+    {
+        "command": "code", "usage": "`$code {CODE} {NA, EU, ASIA}`\nSets your active voice channel to the code and region."
     }
 ]
