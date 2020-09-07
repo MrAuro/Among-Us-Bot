@@ -110,7 +110,14 @@ client.on("message", message => {
                         .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`)
                         .setTimestamp()
                         .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-                       message.channel.send(codeEmbed);
+
+                        try{
+
+                            var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
+                            client.channels.cache.get(codesID).send(codeEmbed);
+                        } catch (err) {
+                            message.channel.send(codeEmbed);
+                        }
 
                         message.member.voice.channel.edit({
                             name: `${args[1]} | ${args[2]}`
