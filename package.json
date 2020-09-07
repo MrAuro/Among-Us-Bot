@@ -1,0 +1,22 @@
+{
+  "name": "among-us-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrAuro/Among-Us-Bot.git"
+  },
+  "author": "Auro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MrAuro/Among-Us-Bot/issues"
+  },
+  "homepage": "https://github.com/MrAuro/Among-Us-Bot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
