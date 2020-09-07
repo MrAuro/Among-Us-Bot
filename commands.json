@@ -1,0 +1,11 @@
+[
+    {
+        "command": "ping", "usage": "Get the delay to the bot."
+    },
+    {
+        "command": "help", "usage": "Gives help on the bot."
+    },
+    {
+        "command": "usage", "usage": "Gives the usage of a command."
+    }
+]
