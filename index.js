@@ -43,7 +43,29 @@ client.on("message", message => {
         break;
 
         case "setup":
-            
+            var codesID = message.guild.channels.find("id", args[1])
+            var queueID = message.guild.channels.find("id", args[2])
+            var gameplayID = message.guild.channels.find("id", args[3])
+            try
+            {
+                if (args[1] === codesID){
+                    // Is args a channel?
+                    if (codesID.type === "text"){
+                        // Is codesID a text channel?
+                        if (args[2] === queueID){
+                            if (queueID.type === "voice"){
+                                if(args[3] === gameplayID){
+                                    if(gameplayID.type === "voice"){
+                                        // FINALLY IN
+                                        // Do stuff...
+                                    }
+                                }
+                            }
+                            // Gameplay VC
+                        }
+                    }
+                }
+            } catch (err) { message.channel.send("Unknown Error")}
     }
 })
 
