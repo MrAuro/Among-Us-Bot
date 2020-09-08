@@ -18,6 +18,15 @@ client.on("ready", () => {
 
 client.on("voiceStateUpdate", (oldState, newState) => {
     // AHHAJFHsgdlkjdfgk i spent hours trying to fix this
+
+    /* TO DO
+
+        right now the bot only drags people in if size <10 BUT
+        it needs to keep track of who joins the queue and drag people in the 
+        game channel when someone in game channel leaves.
+
+    */
+
     let oldID;
     let newID;
     if (oldState.channel) oldID = oldState.channelID;
@@ -28,6 +37,13 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 
     if (oldID !== vcID && newID === vcID) {
         console.log("joined") // this is not logged
+
+        const gamechannelID = client.channels.cache.find(channel => channel.id === '752330521526272141')
+        console.log(gamechannelID.members.size);
+        if (gamechannelID.members.size < 10 ){
+            newState.member.voice.setChannel(gamechannelID);
+        }
+
     } else if (oldID === vcID && newID !== vcID) {
         console.log("left") // this is not logged
     }
