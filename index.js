@@ -7,6 +7,8 @@ const commandsList = require("./commands.json");
 
 const prefix = "$"
 
+var peopleInQueue = []
+
 client.on("ready", () => {
     console.log(`${client.user.username} is online!`)
     client.user.setActivity("Among Us", {
@@ -32,21 +34,45 @@ client.on("voiceStateUpdate", (oldState, newState) => {
     if (oldState.channel) oldID = oldState.channelID;
     if (newState.channel) newID = newState.channelID;
 
-    console.log("test") // this is logged
     const vcID = client.channels.cache.find(channel => channel.name === "Queue").id;
 
     if (oldID !== vcID && newID === vcID) {
-        console.log("joined") // this is not logged
 
-        const gamechannelID = client.channels.cache.find(channel => channel.id === '752330521526272141')
-        console.log(gamechannelID.members.size);
-        if (gamechannelID.members.size < 10 ){
-            newState.member.voice.setChannel(gamechannelID);
+        try {
+            console.table(peopleInQueue)
+            const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+            console.log(gamechannelID.members.size);
+            if (gamechannelID.members.size < 0) {
+                newState.member.voice.setChannel(gamechannelID);
+            } else {
+                peopleInQueue.push(newState.id);
+            }
+        } catch (err) {
+            console.log(err)
         }
 
+
     } else if (oldID === vcID && newID !== vcID) {
-        console.log("left") // this is not logged
+        peopleInQueue.splice(peopleInQueue.indexOf(newState.id), 1);
+
+        console.table(peopleInQueue)
     }
+})
+
+client.on("voiceStateUpdate", (oldState, newState) => {
+    let oldID;
+    let newID;
+    if (oldState.channel) oldID = oldState.channelID;
+    if (newState.channel) newID = newState.channelID;
+
+    const gameID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+
+    if (oldID !== gameID && newID === gameID) {
+
+    } else if (oldID === vcID && newID !== vcID) {
+
+    }
+    // vcID is replaced by gameID in here
 })
 
 client.on("message", message => {
