@@ -42,7 +42,12 @@ client.on("voiceStateUpdate", (oldState, newState) => {
             console.table(peopleInQueue)
             const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
             console.log(gamechannelID.members.size);
-            if (gamechannelID.members.size < 0) {
+            if (gamechannelID.members.size < 10) {
+
+                const user = guild.members.cache.get(peopleInQueue[0]);
+                peopleInQueue.shift();
+                user.voice.setChannel(gamechannelID);
+                
                 newState.member.voice.setChannel(gamechannelID);
             } else {
                 peopleInQueue.push(newState.id);
@@ -69,8 +74,18 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 
     if (oldID !== gameID && newID === gameID) {
 
-    } else if (oldID === vcID && newID !== vcID) {
 
+    } else if (oldID === vcID && newID !== vcID) {
+        const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+            console.log(gamechannelID.members.size);
+            if (gamechannelID.members.size < 10) {
+
+                const user = guild.members.cache.get(peopleInQueue[0]);
+                peopleInQueue.shift();
+                user.voice.setChannel(gamechannelID);
+                
+                newState.member.voice.setChannel(gamechannelID);
+            }
     }
     // vcID is replaced by gameID in here
 })
@@ -91,6 +106,7 @@ client.on("message", message => {
 
         case "move":
             const user = message.mentions.members.first();
+            console.log(user)
             user.voice.setChannel('752649460005470259');
             const vc = client.channels.cache.find(channel => channel.id === '752649460005470259')
             console.log(vc.members.size);
