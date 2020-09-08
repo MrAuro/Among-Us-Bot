@@ -54,12 +54,7 @@ client.on("message", message => {
             }
             commandsEmbed.setTimestamp()
             .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-            try{
-                message.author.send(commandsEmbed);
-                message.channel.send("Check your DM's!")
-            } catch (err) {
                 message.channel.send(commandsEmbed)
-            }
             break;
 
         case "usage":
