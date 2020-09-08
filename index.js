@@ -17,7 +17,9 @@ client.on("ready", () => {
 client.on("message", message => {
     const args = message.content.substr(prefix.length).split(" ");
     if (!message.content.startsWith(prefix)) return;
-    if(message.author.bot){ return; }
+    if (message.author.bot) {
+        return;
+    }
 
     switch (args[0]) {
         case "ping":
@@ -90,6 +92,7 @@ client.on("message", message => {
             break;
 
         case "code":
+            message.delete();
             let re = new RegExp('^[A-Z]+');
             if (args[1].length > 4) {
                 message.channel.send("**Error:** Invalid Code")
@@ -102,19 +105,18 @@ client.on("message", message => {
             if (args[2] === "NA" || args[2] === "EU" || args[2] === "ASIA") {
                 if (args[1].match(re)) {
                     if (message.member.voice.channel) {
-                        console.log(message.member.voice.channel.id)
-                        
                         const codeEmbed = new Discord.MessageEmbed()
-                        .setColor("#3A92EF")
-                        .setTitle(`${args[1]} on ${args[2]}`)
-                        .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`)
-                        .setTimestamp()
-                        .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-
-                        try{
-
+                            .setColor("#3A92EF")
+                            .setTitle(`${args[1]} on ${args[2]}`)
+                            .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`)
+                            .setTimestamp()
+                            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+                        try {
                             var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
                             client.channels.cache.get(codesID).send(codeEmbed);
+                            message.channel.send(`Sent in <#${codesID}>`).then(msg => {
+                                msg.delete({ timeout: 5000 })
+                            })
                         } catch (err) {
                             message.channel.send(codeEmbed);
                         }
@@ -137,25 +139,27 @@ client.on("message", message => {
 
 client.on("message", message => {
     const args = message.content.toLowerCase();
-    if(message.author.bot){ return; }
-
-    function codeFeature(){
-            for (var i = 0; i < commandsList.length; i++) {
-                // this is unnessacary, fix this later.
-                if (commandsList[i].command == "code") {
-
-                    const usageUsageEmbed = new Discord.MessageEmbed()
-                        .setColor("#66B66E")
-                        .setTitle(`Usage of: ${commandsList[i].command}`)
-                        .setDescription(commandsList[i].usage)
-                        .setTimestamp()
-                        .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-                    message.channel.send(usageUsageEmbed);
-                }
-            }
+    if (message.author.bot) {
+        return;
     }
 
-    if (args.includes("code is")){
+    function codeFeature() {
+        for (var i = 0; i < commandsList.length; i++) {
+            // this is unnessacary, fix this later.
+            if (commandsList[i].command == "code") {
+
+                const usageUsageEmbed = new Discord.MessageEmbed()
+                    .setColor("#66B66E")
+                    .setTitle(`Usage of: ${commandsList[i].command}`)
+                    .setDescription(commandsList[i].usage)
+                    .setTimestamp()
+                    .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+                message.channel.send(usageUsageEmbed);
+            }
+        }
+    }
+
+    if (args.includes("code is")) {
         message.channel.send("**Hey!** I have a feature for that!")
         codeFeature();
     }
