@@ -29,8 +29,38 @@ client.on("message", message => {
             break;
 
         case "help":
-            // do this!
-            message.channel.send("Help")
+            const helpEmbed = new Discord.MessageEmbed()
+            .setColor("#5CFF35")
+            .setTitle("Among Us Bot Help")
+            .setDescription("There are many commands with Among Us Bot. Most of them you don't even have to do anything to prep!\nBy using the `$commands` command you can view all of the commands.")
+            .addFields(
+                { name: 'Github', value: '[Contribute Here!](https://www.github.com/mrauro/among-us-bot/)', inline: 'true' },
+                { name: 'Twitter', value: '[Follow me on Twitter!](https://www.twitter.com/auror6s)', inline: 'true'},
+                { name: 'Invite', value: 'Currently, this bot is private however later you can add this bot to your own Discord!', inline: 'true'},
+            )
+            .setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HCuyxDU5qqVDlpp0FnPVJwAAAA%26pid%3DApi&f=1')
+            .setTimestamp()
+            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+            message.channel.send(helpEmbed)
+            break;
+
+        case "commands":
+            const commandsEmbed = new Discord.MessageEmbed()
+            .setColor("#5CFF35")
+            .setTitle("Among Us Bot Commands")
+            .setDescription("Below are all of the commands associated with the bot!")
+            for(var i =0; i < commandsList.length; i++){
+                commandsEmbed.addField(commandsList[i].command, commandsList[i].usage)
+            }
+            commandsEmbed.setTimestamp()
+            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+            try{
+
+                message.author.send(commandsEmbed);
+                message.channel.send("Check your DM's!")
+            } catch (err) {
+                message.channel.send(commandsEmbed)
+            }
             break;
 
         case "usage":

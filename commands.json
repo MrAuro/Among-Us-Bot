@@ -10,5 +10,8 @@
     },
     {
         "command": "code", "usage": "`$code {CODE} {NA, EU, ASIA}`\nSets your active voice channel to the code and region."
+    }, 
+    {
+        "command": "commands", "usage": "`$commands`\nLists all of the commands."
     }
 ]
