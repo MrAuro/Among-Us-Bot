@@ -14,6 +14,25 @@ client.on("ready", () => {
     })
 });
 
+// let queueID = client.channels.cache.find(channel => channel.name === "Queue").id; // ✅
+
+client.on("voiceStateUpdate", (oldState, newState) => {
+    // AHHAJFHsgdlkjdfgk i spent hours trying to fix this
+    let oldID;
+    let newID;
+    if (oldState.channel) oldID = oldState.channelID;
+    if (newState.channel) newID = newState.channelID;
+
+    console.log("test") // this is logged
+    const vcID = client.channels.cache.find(channel => channel.name === "Queue").id;
+
+    if (oldID !== vcID && newID === vcID) {
+        console.log("joined") // this is not logged
+    } else if (oldID === vcID && newID !== vcID) {
+        console.log("left") // this is not logged
+    }
+})
+
 client.on("message", message => {
     const args = message.content.substr(prefix.length).split(" ");
     if (!message.content.startsWith(prefix)) return;
@@ -28,33 +47,53 @@ client.on("message", message => {
             });
             break;
 
+        case "move":
+            const user = message.mentions.members.first();
+            user.voice.setChannel('752649460005470259');
+            const vc = client.channels.cache.find(channel => channel.id === '752649460005470259')
+            console.log(vc.members.size);
+            break;
+
+        case "eeee":
+            const eeee = client.channels.cache.find(channel => channel.id === '752649460005470259')
+            console.log(eeee.members.size);
+            break;
+
         case "help":
             const helpEmbed = new Discord.MessageEmbed()
-            .setColor("#5CFF35")
-            .setTitle("Among Us Bot Help")
-            .setDescription("There are many commands with Among Us Bot. Most of them you don't even have to do anything to prep!\nBy using the `$commands` command you can view all of the commands.")
-            .addFields(
-                { name: 'Github', value: '[Contribute Here!](https://www.github.com/mrauro/among-us-bot/)', inline: 'true' },
-                { name: 'Twitter', value: '[Follow me on Twitter!](https://www.twitter.com/auror6s)', inline: 'true'},
-                { name: 'Invite', value: 'Currently, this bot is private however later you can add this bot to your own Discord!', inline: 'true'},
-            )
-            .setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HCuyxDU5qqVDlpp0FnPVJwAAAA%26pid%3DApi&f=1')
-            .setTimestamp()
-            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+                .setColor("#5CFF35")
+                .setTitle("Among Us Bot Help")
+                .setDescription("There are many commands with Among Us Bot. Most of them you don't even have to do anything to prep!\nBy using the `$commands` command you can view all of the commands.")
+                .addFields({
+                    name: 'Github',
+                    value: '[Contribute Here!](https://www.github.com/mrauro/among-us-bot/)',
+                    inline: 'true'
+                }, {
+                    name: 'Twitter',
+                    value: '[Follow me on Twitter!](https://www.twitter.com/auror6s)',
+                    inline: 'true'
+                }, {
+                    name: 'Invite',
+                    value: 'Currently, this bot is private however later you can add this bot to your own Discord!',
+                    inline: 'true'
+                }, )
+                .setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HCuyxDU5qqVDlpp0FnPVJwAAAA%26pid%3DApi&f=1')
+                .setTimestamp()
+                .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
             message.channel.send(helpEmbed)
             break;
 
         case "commands":
             const commandsEmbed = new Discord.MessageEmbed()
-            .setColor("#5CFF35")
-            .setTitle("Among Us Bot Commands")
-            .setDescription("Below are all of the commands associated with the bot!")
-            for(var i =0; i < commandsList.length; i++){
+                .setColor("#5CFF35")
+                .setTitle("Among Us Bot Commands")
+                .setDescription("Below are all of the commands associated with the bot!")
+            for (var i = 0; i < commandsList.length; i++) {
                 commandsEmbed.addField(commandsList[i].command, commandsList[i].usage)
             }
             commandsEmbed.setTimestamp()
-            .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-                message.channel.send(commandsEmbed)
+                .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+            message.channel.send(commandsEmbed)
             break;
 
         case "usage":
@@ -139,7 +178,9 @@ client.on("message", message => {
                             var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
                             client.channels.cache.get(codesID).send(codeEmbed);
                             message.channel.send(`Sent in <#${codesID}>`).then(msg => {
-                                msg.delete({ timeout: 5000 })
+                                msg.delete({
+                                    timeout: 5000
+                                })
                             })
                         } catch (err) {
                             message.channel.send(codeEmbed);
