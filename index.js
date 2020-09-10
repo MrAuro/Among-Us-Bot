@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const nodeCMD = require("node-cmd");
+
 const client = new Discord.Client();
 
 const token = require("./token.json");
@@ -7,8 +9,15 @@ const commandsList = require("./commands.json");
 
 const prefix = "$"
 
+var gitCommit = "?";
+
+
 client.on("ready", () => {
-    console.log(`${client.user.username} is online!`)
+    nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
+         console.log(data);
+         gitCommit = data;
+    })
+    console.log(`${client.user.username} is online on commit ${gitCommit}`)
     client.user.setActivity("Among Us", {
         type: "PLAYING"
     })
@@ -40,7 +49,7 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 
         const gamechannelID = client.channels.cache.find(channel => channel.id === '752330521526272141')
         console.log(gamechannelID.members.size);
-        if (gamechannelID.members.size < 10 ){
+        if (gamechannelID.members.size < 10) {
             newState.member.voice.setChannel(gamechannelID);
         }
 
@@ -61,6 +70,10 @@ client.on("message", message => {
             message.channel.send("Pinging...").then(msg => {
                 msg.edit("Ping: " + (Date.now() - msg.createdTimestamp + " ms"));
             });
+            break;
+
+        case "version":
+            message.channel.send(`Commit \`${gitCommit}\``)
             break;
 
         case "move":
