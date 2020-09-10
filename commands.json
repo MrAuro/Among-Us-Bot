@@ -13,5 +13,8 @@
     }, 
     {
         "command": "commands", "usage": "`$commands`\nLists all of the commands."
+    },
+    {
+        "command": "version", "usage": "`$version`\nGet the current GitHub commit (https://www.github.com/mrauro/among-us-bot/)"   
     }
 ]
