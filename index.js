@@ -1,6 +1,4 @@
 const Discord = require("discord.js");
-const nodeCMD = require("node-cmd");
-
 const client = new Discord.Client();
 
 const token = require("./token.json");
@@ -9,15 +7,10 @@ const commandsList = require("./commands.json");
 
 const prefix = "$"
 
-var gitCommit = "?";
-
+var peopleInQueue = []
 
 client.on("ready", () => {
-    nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
-         console.log(data);
-         gitCommit = data;
-    })
-    console.log(`${client.user.username} is online on commit ${gitCommit}`)
+    console.log(`${client.user.username} is online!`)
     client.user.setActivity("Among Us", {
         type: "PLAYING"
     })
@@ -41,21 +34,60 @@ client.on("voiceStateUpdate", (oldState, newState) => {
     if (oldState.channel) oldID = oldState.channelID;
     if (newState.channel) newID = newState.channelID;
 
-    console.log("test") // this is logged
     const vcID = client.channels.cache.find(channel => channel.name === "Queue").id;
 
     if (oldID !== vcID && newID === vcID) {
-        console.log("joined") // this is not logged
 
-        const gamechannelID = client.channels.cache.find(channel => channel.id === '752330521526272141')
-        console.log(gamechannelID.members.size);
-        if (gamechannelID.members.size < 10) {
-            newState.member.voice.setChannel(gamechannelID);
+        try {
+            console.table(peopleInQueue)
+            const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+            console.log(gamechannelID.members.size);
+            if (gamechannelID.members.size < 10) {
+
+                const user = guild.members.cache.get(peopleInQueue[0]);
+                peopleInQueue.shift();
+                user.voice.setChannel(gamechannelID);
+                
+                newState.member.voice.setChannel(gamechannelID);
+            } else {
+                peopleInQueue.push(newState.id);
+            }
+        } catch (err) {
+            console.log(err)
         }
 
+
     } else if (oldID === vcID && newID !== vcID) {
-        console.log("left") // this is not logged
+        peopleInQueue.splice(peopleInQueue.indexOf(newState.id), 1);
+
+        console.table(peopleInQueue)
     }
+})
+
+client.on("voiceStateUpdate", (oldState, newState) => {
+    let oldID;
+    let newID;
+    if (oldState.channel) oldID = oldState.channelID;
+    if (newState.channel) newID = newState.channelID;
+
+    const gameID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+
+    if (oldID !== gameID && newID === gameID) {
+
+
+    } else if (oldID === vcID && newID !== vcID) {
+        const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+            console.log(gamechannelID.members.size);
+            if (gamechannelID.members.size < 10) {
+
+                const user = guild.members.cache.get(peopleInQueue[0]);
+                peopleInQueue.shift();
+                user.voice.setChannel(gamechannelID);
+                
+                newState.member.voice.setChannel(gamechannelID);
+            }
+    }
+    // vcID is replaced by gameID in here
 })
 
 client.on("message", message => {
@@ -72,12 +104,9 @@ client.on("message", message => {
             });
             break;
 
-        case "version":
-            message.channel.send(`Commit \`${gitCommit}\``)
-            break;
-
         case "move":
             const user = message.mentions.members.first();
+            console.log(user)
             user.voice.setChannel('752649460005470259');
             const vc = client.channels.cache.find(channel => channel.id === '752649460005470259')
             console.log(vc.members.size);
