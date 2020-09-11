@@ -1,9 +1,16 @@
 # Among-Us-Bot
 An Among Us Bot built in Discord.JS
 
-Under heavy development right now!
+**Under heavy development right now! If you find any errors be sure to come here and [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose).**
 
-Open source! If you are good at writing readmes, feel free to write this one!
+# To Do:
+- [ ] Looking For Group command
+- [ ] Queue System with Voice Channels
+- [ ] Mute command that server mutes everyone in a voice channel
+- [x] Code command that changes the VC name to the active code
+
+---
+
 
 You need a `.env` to store your token which is formatted like this:
 

@@ -13,7 +13,7 @@ const client = new Discord.Client();
 
 require('dotenv').config();
 
-const token = process.env.TOKEN;
+const token = process.env.BETATOKEN;
 
 const commandsList = require("./commands.json");
 
@@ -21,9 +21,11 @@ const prefix = "$"
 
 var gitCommit = "Couldn't get commit"
 
+var peopleInQueue = []
+
 
 client.on("ready", async () => {
-  gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function(err, data, stderr) {
+  gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
     console.log(`${client.user.username} is online on commit ${data}`)
     // is this okay in an await function?
     client.user.setActivity("Among Us", {
@@ -48,22 +50,51 @@ client.on("voiceStateUpdate", (oldState, newState) => {
   if (oldState.channel) oldID = oldState.channelID;
   if (newState.channel) newID = newState.channelID;
 
-  const vcID = client.channels.cache.find(channel => channel.name === "Queue").id;
+  var queueID = ""
+  var gamechannelID = ""
 
-  if (oldID !== vcID && newID === vcID) {
+  try {
+    queueID = client.channels.cache.find(channel => channel.name === "Queue").id;
+    gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+  } catch (err) {
+    console.log(err)
+  }
+
+
+  if (oldID !== queueID && newID === queueID) {
     // JOINED QUEUE CHAT
+    // MOVE USER: newState.member.voice.setChannel(gamechannelID); 
 
-    // IN DEVELOPMENT
-    const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us")) // look for the "| Among Us" in the game channels that is changed by the $code command
+    peopleInQueue.push(newState.member.id);
 
-    console.log(gamechannelID.members.size);
     if (gamechannelID.members.size < 10) {
-      newState.member.voice.setChannel(gamechannelID);
+
+      var toBeMoved = newState.guild.members.cache.get(peopleInQueue[0]);
+      toBeMoved.voice.setChannel(gamechannelID)
+
+      peopleInQueue.shift();
+
     }
 
-  } else if (oldID === vcID && newID !== vcID) {
+  } 
+  if (oldID === queueID && newID !== queueID) {
     // LEFT QUEUE CHAT
+
+    peopleInQueue.splice(peopleInQueue.indexOf(newState.member.id), 1)
+
+  } 
+  //                        \/ THIS ID NEEDS TO BE HERE, it doesnt work without it
+  if (oldID === gamechannelID.id && newID !== gamechannelID.id) {
+    if (gamechannelID.members.size < 10) {
+
+      var toBeMoved = newState.guild.members.cache.get(peopleInQueue[0]);
+      toBeMoved.voice.setChannel(gamechannelID)
+
+      peopleInQueue.shift();
+
+    }
   }
+
 })
 
 client.on("message", message => {
@@ -162,11 +193,7 @@ client.on("message", message => {
 
       message.delete();
       let re = new RegExp('^[A-Za-z]+');
-      if (args[1].length > 4) {
-        message.channel.send("**Error:** Invalid Code")
-        return;
-      }
-      if (args[1].length < 4) {
+      if (args[1].length < 6) { // 6 digit codes now (at least on test branch)
         message.channel.send("**Error:** Invalid Code")
         return;
       }
@@ -196,7 +223,7 @@ client.on("message", message => {
             }
 
             message.member.voice.channel.edit({
-              name: `${args[1].toUpperCase()} | ${args[2].toUpperCase()}`
+              name: `${args[1].toUpperCase()} | ${args[2].toUpperCase()} | Among Us` // This among us NEEDS to be here, it makes the bot work without storing data
             })
           } else {
             message.channel.send("**Error:** Please join a voice channel.")
