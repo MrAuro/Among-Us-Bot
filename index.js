@@ -23,7 +23,7 @@ var gitCommit = "Couldn't get commit"
 
 
 client.on("ready", async () => {
-  gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
+  gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function(err, data, stderr) {
     console.log(`${client.user.username} is online on commit ${data}`)
     // is this okay in an await function?
     client.user.setActivity("Among Us", {
@@ -54,7 +54,7 @@ client.on("voiceStateUpdate", (oldState, newState) => {
     // JOINED QUEUE CHAT
 
     // IN DEVELOPMENT
-    const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))// look for the "| Among Us" in the game channels that is changed by the $code command 
+    const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us")) // look for the "| Among Us" in the game channels that is changed by the $code command
 
     console.log(gamechannelID.members.size);
     if (gamechannelID.members.size < 10) {
@@ -161,7 +161,7 @@ client.on("message", message => {
       // changes the vc name based on the code and region
 
       message.delete();
-      let re = new RegExp('^[A-Z]+');
+      let re = new RegExp('^[A-Za-z]+');
       if (args[1].length > 4) {
         message.channel.send("**Error:** Invalid Code")
         return;
@@ -170,13 +170,13 @@ client.on("message", message => {
         message.channel.send("**Error:** Invalid Code")
         return;
       }
-      if (args[2] === "NA" || args[2] === "EU" || args[2] === "ASIA") {
+      if (args[2] === "NA" || args[2] === "na" || args[2] === "EU" || args[2] === "eu" || args[2] === "ASIA" || args[2] === "asia") {
         if (args[1].match(re)) {
           if (message.member.voice.channel) {
             const codeEmbed = new Discord.MessageEmbed()
               .setColor("#3A92EF")
-              .setTitle(`${args[1]} on ${args[2]}`)
-              .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`) // make this look better
+              .setTitle(`${args[1].toUpperCase()} on ${args[2].toUpperCase()}`)
+              .setDescription(`The code is ${args[1].toUpperCase()} on ${args[2].toUpperCase()}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`) // make this look better
               .setTimestamp()
               .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
             try {
@@ -196,7 +196,7 @@ client.on("message", message => {
             }
 
             message.member.voice.channel.edit({
-              name: `${args[1]} | ${args[2]}`
+              name: `${args[1].toUpperCase()} | ${args[2].toUpperCase()}`
             })
           } else {
             message.channel.send("**Error:** Please join a voice channel.")
