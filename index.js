@@ -157,6 +157,32 @@ client.on("message", message => {
       }
       break;
 
+
+    case "create":
+    //TODO: create a check if channels exist then create them if they don't
+      message.delete();
+      const channelName = 'Among-gen';
+      const categoryName = 'Among Us';
+
+      message.guild.channels.create(categoryName, {
+        type: 'category',
+        permissionOverwrites: [{
+          id: message.guild.id,
+          allow: ['VIEW_CHANNEL'],
+        }]
+      }).then(createdChannel => {
+        var id = createdChannel.id
+        message.guild.channels.create(channelName, {
+          type: 'voice',
+          parent: id,
+          permissionOverwrites: [{
+            id: message.guild.id,
+            allow: ['VIEW_CHANNEL'],
+          }]
+        })
+      })
+      break;
+
     case "code":
       // changes the vc name based on the code and region
 
@@ -208,8 +234,13 @@ client.on("message", message => {
       } else {
         message.channel.send("**Error:** Invalid Region (NA, EU, or ASIA)")
       }
+      break;
+    default:
+      message.reply(`Sorry, that command doesn't exist.`);
+      break;
   }
 })
+
 
 client.on("message", message => {
   const args = message.content.toLowerCase();

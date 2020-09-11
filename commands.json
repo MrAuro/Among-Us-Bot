@@ -15,6 +15,9 @@
         "command": "commands", "usage": "`$commands`\nLists all of the commands."
     },
     {
+        "command": "create", "usage": "`$create`\nSetup among-us channels."
+    },
+    {
         "command": "version", "usage": "`$version`\nGet the current GitHub commit (https://www.github.com/mrauro/among-us-bot/)"   
     }
 ]
