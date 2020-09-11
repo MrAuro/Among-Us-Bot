@@ -1,3 +1,11 @@
+/*
+To Do:
+
+Looking for Group command
+Queue system in Queue VC
+$mute command to mute users on mobile
+
+*/
 const Discord = require("discord.js");
 const nodeCMD = require("node-cmd");
 
@@ -11,25 +19,22 @@ const commandsList = require("./commands.json");
 
 const prefix = "$"
 
-var gitCommit = "?";
+var gitCommit = "Couldn't get commit"
 
 
-client.on("ready", () => {
-  nodeCMD.get(`git rev-parse --short HEAD`, function(err, data, stderr) {
-    console.log(data);
-    gitCommit = data;
+client.on("ready", async () => {
+  gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
+    console.log(`${client.user.username} is online on commit ${data}`)
+    // is this okay in an await function?
+    client.user.setActivity("Among Us", {
+      type: "PLAYING"
+    })
+    gitCommit = data
   })
-  console.log(`${client.user.username} is online on commit ${gitCommit}`)
-  client.user.setActivity("Among Us", {
-    type: "PLAYING"
-  })
+
 });
 
-// let queueID = client.channels.cache.find(channel => channel.name === "Queue").id; // ✅
-
 client.on("voiceStateUpdate", (oldState, newState) => {
-  // AHHAJFHsgdlkjdfgk i spent hours trying to fix this
-
   /* TO DO
 
       right now the bot only drags people in if size <10 BUT
@@ -43,20 +48,21 @@ client.on("voiceStateUpdate", (oldState, newState) => {
   if (oldState.channel) oldID = oldState.channelID;
   if (newState.channel) newID = newState.channelID;
 
-  console.log("test") // this is logged
   const vcID = client.channels.cache.find(channel => channel.name === "Queue").id;
 
   if (oldID !== vcID && newID === vcID) {
-    console.log("joined") // this is not logged
+    // JOINED QUEUE CHAT
 
-    const gamechannelID = client.channels.cache.find(channel => channel.id === '752330521526272141')
+    // IN DEVELOPMENT
+    const gamechannelID = client.channels.cache.find(channel => channel.name.includes("| Among Us"))// look for the "| Among Us" in the game channels that is changed by the $code command 
+
     console.log(gamechannelID.members.size);
     if (gamechannelID.members.size < 10) {
       newState.member.voice.setChannel(gamechannelID);
     }
 
   } else if (oldID === vcID && newID !== vcID) {
-    console.log("left") // this is not logged
+    // LEFT QUEUE CHAT
   }
 })
 
@@ -69,28 +75,19 @@ client.on("message", message => {
 
   switch (args[0]) {
     case "ping":
+      // Ping the bot and get the delay
       message.channel.send("Pinging...").then(msg => {
         msg.edit("Ping: " + (Date.now() - msg.createdTimestamp + " ms"));
       });
       break;
 
     case "version":
+      // Get the git version
       message.channel.send(`Commit \`${gitCommit}\``)
       break;
 
-    case "move":
-      const user = message.mentions.members.first();
-      user.voice.setChannel('752649460005470259');
-      const vc = client.channels.cache.find(channel => channel.id === '752649460005470259')
-      console.log(vc.members.size);
-      break;
-
-    case "eeee":
-      const eeee = client.channels.cache.find(channel => channel.id === '752649460005470259')
-      console.log(eeee.members.size);
-      break;
-
     case "help":
+      // Sends help on the bot
       const helpEmbed = new Discord.MessageEmbed()
         .setColor("#5CFF35")
         .setTitle("Among Us Bot Help")
@@ -105,7 +102,7 @@ client.on("message", message => {
           inline: 'true'
         }, {
           name: 'Invite',
-          value: 'Currently, this bot is private however later you can add this bot to your own Discord!',
+          value: 'Currently, this bot is private however later you can add this bot to your own Discord!', // im planning on making this public
           inline: 'true'
         }, )
         .setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HCuyxDU5qqVDlpp0FnPVJwAAAA%26pid%3DApi&f=1')
@@ -115,6 +112,7 @@ client.on("message", message => {
       break;
 
     case "commands":
+      // List all the commands from the commands.json file
       const commandsEmbed = new Discord.MessageEmbed()
         .setColor("#5CFF35")
         .setTitle("Among Us Bot Commands")
@@ -128,6 +126,8 @@ client.on("message", message => {
       break;
 
     case "usage":
+      // Sends the usage of a command
+
       // this needs to check if there is no command in commands.json
       if (args[1] === undefined) {
         for (var i = 0; i < commandsList.length; i++) {
@@ -157,35 +157,9 @@ client.on("message", message => {
       }
       break;
 
-    case "setup":
-      // unnessacary?
-      var codesID = message.guild.channels.find("id", args[1])
-      var queueID = message.guild.channels.find("id", args[2])
-      var gameplayID = message.guild.channels.find("id", args[3])
-      try {
-        if (args[1] === codesID) {
-          // Is args a channel?
-          if (codesID.type === "text") {
-            // Is codesID a text channel?
-            if (args[2] === queueID) {
-              if (queueID.type === "voice") {
-                if (args[3] === gameplayID) {
-                  if (gameplayID.type === "voice") {
-                    // FINALLY IN
-                    // Do stuff...
-                  }
-                }
-              }
-              // Gameplay VC
-            }
-          }
-        }
-      } catch (err) {
-        message.channel.send("Unknown Error")
-      }
-      break;
-
     case "code":
+      // changes the vc name based on the code and region
+
       message.delete();
       let re = new RegExp('^[A-Z]+');
       if (args[1].length > 4) {
@@ -202,17 +176,21 @@ client.on("message", message => {
             const codeEmbed = new Discord.MessageEmbed()
               .setColor("#3A92EF")
               .setTitle(`${args[1]} on ${args[2]}`)
-              .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`)
+              .setDescription(`The code is ${args[1]} on ${args[2]}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`) // make this look better
               .setTimestamp()
               .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
             try {
               var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
               client.channels.cache.get(codesID).send(codeEmbed);
-              message.channel.send(`Sent in <#${codesID}>`).then(msg => {
-                msg.delete({
-                  timeout: 5000
+              if (!message.channel.id === codesID) {
+                // check if the command wasnt sent in the codes channel
+                message.channel.send(`Sent in <#${codesID}>`).then(msg => {
+                  msg.delete({
+                    timeout: 5000
+                  })
                 })
-              })
+              }
+
             } catch (err) {
               message.channel.send(codeEmbed);
             }
@@ -256,6 +234,7 @@ client.on("message", message => {
   }
 
   if (args.includes("code is")) {
+    // remind users of my nifty featuere :)
     message.channel.send("**Hey!** I have a feature for that!")
     codeFeature();
   }
