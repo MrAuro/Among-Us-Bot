@@ -2,7 +2,6 @@
 To Do:
 
 Looking for Group command
-Queue system in Queue VC
 $mute command to mute users on mobile
 
 */
@@ -13,7 +12,7 @@ const client = new Discord.Client();
 
 require('dotenv').config();
 
-const token = process.env.BETATOKEN;
+const token = process.env.TOKEN;
 
 const commandsList = require("./commands.json");
 
@@ -37,13 +36,6 @@ client.on("ready", async () => {
 });
 
 client.on("voiceStateUpdate", (oldState, newState) => {
-  /* TO DO
-
-      right now the bot only drags people in if size <10 BUT
-      it needs to keep track of who joins the queue and drag people in the
-      game channel when someone in game channel leaves.
-
-  */
 
   let oldID;
   let newID;
