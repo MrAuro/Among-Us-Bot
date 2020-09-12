@@ -78,7 +78,7 @@ client.on("voiceStateUpdate", (oldState, newState) => {
   if (oldID === gamechannelID.id && newID !== gamechannelID.id) {
     if (gamechannelID.members.size < 10) {
 
-      if (peopleInQueue.length > 1) {
+      if (peopleInQueue.length >= 1) {
 
         var toBeMoved = newState.guild.members.cache.get(peopleInQueue[0]);
         toBeMoved.voice.setChannel(gamechannelID)
