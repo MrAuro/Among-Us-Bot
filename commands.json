@@ -16,5 +16,11 @@
     },
     {
         "command": "version", "usage": "`$version`\nGet the current GitHub commit (https://www.github.com/mrauro/among-us-bot/)"   
+    },
+    {
+        "command": "mute", "usage": "`$mute` or `$m`\nToggle mute and deafen everyone in the active VC"
+    },
+    {
+        "command": "dead", "usage": "`$dead` or `$d`\nUnmutes and undeafens you. Use this if you are dead and want to talk to other dead players."
     }
 ]

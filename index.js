@@ -2,7 +2,7 @@
 To Do:
 
 Looking for Group command
-$mute command to mute users on mobile
+[/] $mute command to mute users on mobile
 
 */
 const Discord = require("discord.js");
@@ -20,8 +20,9 @@ const prefix = "$"
 
 var gitCommit = "Couldn't get commit"
 
+// Command variables
 var peopleInQueue = []
-
+var alreadyMuted = false;
 
 client.on("ready", async () => {
   gitCommit = await nodeCMD.get(`git rev-parse --short HEAD`, function (err, data, stderr) {
@@ -66,22 +67,22 @@ client.on("voiceStateUpdate", (oldState, newState) => {
       peopleInQueue.shift();
     }
 
-  } 
+  }
   if (oldID === queueID && newID !== queueID) {
     // LEFT QUEUE CHAT
 
     peopleInQueue.splice(peopleInQueue.indexOf(newState.member.id), 1)
 
-  } 
+  }
   //                        \/ THIS ID NEEDS TO BE HERE, it doesnt work without it
   if (oldID === gamechannelID.id && newID !== gamechannelID.id) {
     if (gamechannelID.members.size < 10) {
 
-      if(peopleInQueue.length > 1) {
+      if (peopleInQueue.length > 1) {
 
         var toBeMoved = newState.guild.members.cache.get(peopleInQueue[0]);
         toBeMoved.voice.setChannel(gamechannelID)
-  
+
         peopleInQueue.shift();
       }
 
@@ -104,6 +105,39 @@ client.on("message", message => {
         msg.edit("Ping: " + (Date.now() - msg.createdTimestamp + " ms"));
       });
       break;
+
+    case "m":
+    case "mute":
+      // deafen and mutme evryone
+      var _game = ""
+      try{
+        _game = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
+      }catch (err) {}
+      if (message.member.voice.channel.id === _game.id) {
+        var channel = message.guild.channels.cache.get(message.member.voice.channel.id);
+        alreadyMuted = !alreadyMuted;
+        for (const [memberID, member] of channel.members) {
+          if (alreadyMuted) {
+            member.voice.setMute(true);
+            member.voice.setDeaf(true);
+          } else {
+            
+          member.voice.setMute(false);
+          member.voice.setDeaf(false);
+          }
+        }
+      } else { message.author.send("You must be in the game channel to use this command!")}
+      break;
+    case "d":
+    case "dead":
+      // lets dead people talk while players are deafened
+      if(message.member.voice.channel){
+        var channel = message.guild.channels.cache.get(message.member.voice.channel.id);
+        message.member.voice.setMute(false);
+        message.member.voice.setDeaf(false);
+      }
+
+    break;
 
     case "version":
       // Get the git version
