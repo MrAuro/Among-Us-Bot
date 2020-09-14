@@ -220,7 +220,7 @@ client.on("message", message => {
 
       message.delete();
       let re = new RegExp('^[A-Za-z]+');
-      if (args[1].length < 6) { // 6 digit codes now (at least on test branch)
+      if (args[1].length > 6) { // 6 digit codes now (at least on test branch)
         message.channel.send("**Error:** Invalid Code")
         return;
       }
