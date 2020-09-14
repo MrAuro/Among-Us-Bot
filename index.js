@@ -110,9 +110,9 @@ client.on("message", message => {
     case "mute":
       // deafen and mutme evryone
       var _game = ""
-      try{
+      try {
         _game = client.channels.cache.find(channel => channel.name.includes("| Among Us"))
-      }catch (err) {}
+      } catch (err) {}
       if (message.member.voice.channel.id === _game.id) {
         var channel = message.guild.channels.cache.get(message.member.voice.channel.id);
         alreadyMuted = !alreadyMuted;
@@ -120,24 +120,25 @@ client.on("message", message => {
           if (alreadyMuted) {
             member.voice.setMute(true);
             member.voice.setDeaf(true);
-          } else {
-            
-          member.voice.setMute(false);
-          member.voice.setDeaf(false);
+          } else {  
+            member.voice.setMute(false);
+            member.voice.setDeaf(false);
           }
         }
-      } else { message.author.send("You must be in the game channel to use this command!")}
+      } else {
+        message.author.send("You must be in the game channel to use this command!")
+      }
       break;
     case "d":
     case "dead":
       // lets dead people talk while players are deafened
-      if(message.member.voice.channel){
+      if (message.member.voice.channel) {
         var channel = message.guild.channels.cache.get(message.member.voice.channel.id);
         message.member.voice.setMute(false);
         message.member.voice.setDeaf(false);
       }
 
-    break;
+      break;
 
     case "version":
       // Get the git version
@@ -220,47 +221,49 @@ client.on("message", message => {
 
       message.delete();
       let re = new RegExp('^[A-Za-z]+');
-      if (args[1].length > 6) { // 6 digit codes now (at least on test branch)
-        message.channel.send("**Error:** Invalid Code")
-        return;
-      }
-      if (args[2] === "NA" || args[2] === "na" || args[2] === "EU" || args[2] === "eu" || args[2] === "ASIA" || args[2] === "asia") {
-        if (args[1].match(re)) {
-          if (message.member.voice.channel) {
-            const codeEmbed = new Discord.MessageEmbed()
-              .setColor("#3A92EF")
-              .setTitle(`${args[1].toUpperCase()} on ${args[2].toUpperCase()}`)
-              .setDescription(`The code is ${args[1].toUpperCase()} on ${args[2].toUpperCase()}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`) // make this look better
-              .setTimestamp()
-              .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
-            try {
-              var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
-              client.channels.cache.get(codesID).send(codeEmbed);
-              if (!message.channel.id === codesID) {
-                // check if the command wasnt sent in the codes channel
-                message.channel.send(`Sent in <#${codesID}>`).then(msg => {
-                  msg.delete({
-                    timeout: 5000
-                  })
-                })
-              }
-
-            } catch (err) {
-              message.channel.send(codeEmbed);
-            }
-
-            message.member.voice.channel.edit({
-              name: `${args[1].toUpperCase()} | ${args[2].toUpperCase()} | Among Us` // This among us NEEDS to be here, it makes the bot work without storing data
-            })
-          } else {
-            message.channel.send("**Error:** Please join a voice channel.")
-          }
-
-        } else {
+      if (!args === undefined) {
+        if (args[1].length > 6) { // 6 digit codes now (at least on test branch)
           message.channel.send("**Error:** Invalid Code")
+          return;
         }
-      } else {
-        message.channel.send("**Error:** Invalid Region (NA, EU, or ASIA)")
+        if (args[2] === "NA" || args[2] === "na" || args[2] === "EU" || args[2] === "eu" || args[2] === "ASIA" || args[2] === "asia") {
+          if (args[1].match(re)) {
+            if (message.member.voice.channel) {
+              const codeEmbed = new Discord.MessageEmbed()
+                .setColor("#3A92EF")
+                .setTitle(`${args[1].toUpperCase()} on ${args[2].toUpperCase()}`)
+                .setDescription(`The code is ${args[1].toUpperCase()} on ${args[2].toUpperCase()}.\n\nCheck the voice channel name too!\n*sometimes the voice channel name wont change due to being rate limited*`) // make this look better
+                .setTimestamp()
+                .setFooter(`Requested by ${message.author.username}`, message.author.avatarURL)
+              try {
+                var codesID = message.guild.channels.cache.find(channel => channel.name === "codes").id;
+                client.channels.cache.get(codesID).send(codeEmbed);
+                if (!message.channel.id === codesID) {
+                  // check if the command wasnt sent in the codes channel
+                  message.channel.send(`Sent in <#${codesID}>`).then(msg => {
+                    msg.delete({
+                      timeout: 5000
+                    })
+                  })
+                }
+  
+              } catch (err) {
+                message.channel.send(codeEmbed);
+              }
+  
+              message.member.voice.channel.edit({
+                name: `${args[1].toUpperCase()} | ${args[2].toUpperCase()} | Among Us` // This among us NEEDS to be here, it makes the bot work without storing data
+              })
+            } else {
+              message.channel.send("**Error:** Please join a voice channel.")
+            }
+  
+          } else {
+            message.channel.send("**Error:** Invalid Code")
+          }
+        } else {
+          message.channel.send("**Error:** Invalid Region (NA, EU, or ASIA)")
+        }
       }
   }
 })
