@@ -7,6 +7,8 @@ An Among Us Bot built in Discord.JS to help users find a game.
 __Should be stable__ </br>
 There are no known issues currently. If you find one, [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose)
 
+There may be an issue with the `start.bat` and `run.bat`. It was not tested thoroughly.
+
 # To Do:
 If you know how to do one of these or have an idea, [make a pull request!](https://github.com/MrAuro/Among-Us-Bot/pulls).
 
@@ -20,12 +22,13 @@ If you know how to do one of these or have an idea, [make a pull request!](https
 ## Requirements
 - A bot account and token from [Discord](https://discord.com/developers)
 - [NodeJS](https://nodejs.org/en/)
-- A `.env` file formatted like:
-  ```
-  TOKEN=<your token here>
-  ```
-  
-Once you have all of these run 
+
+Clone the repo and run `start.bat` You will be asked for your token, paste it in and press enter. This will create a `.env` file which stores your token. After the node modules are installed, run the `run.bat` to start your bot! If there are any problems, try the following:
+
+- You have a valid token in your `.env` which inside has `TOKEN=<YOUR TOKEN>`
+- All of the node modules are installed. You can run `npm install` from the command line to install them or update them.
+
+If these do not resolve your problem, [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose)
 
 ---
 

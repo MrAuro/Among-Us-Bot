@@ -1,5 +1,7 @@
-echo Installing node modules
+set /p token=Bot Token:
+echo TOKEN=%token% > .env
+echo Made a .env file with your token.
+echo Installing node modules...
 npm install
-echo Node modules installed
-echo Running index.js
-node index.js
+echo Node modules installed. Start run.bat to start the bot!
+pause
