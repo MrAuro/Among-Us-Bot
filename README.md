@@ -4,8 +4,11 @@ An Among Us Bot built in Discord.JS to help users find a game.
 **Under heavy development right now! If you find any errors be sure to come here and [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose).**
 
 ## Latest Commit Status:
-__Should be stable__ </br>
-There are no known issues currently. If you find one, [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose)
+__Known Bug__ </br>
+
+__Use commit [0a0e656](https://github.com/MrAuro/Among-Us-Bot/commit/020e6c9e7e20f7881a394bce24868a5bf411af25) if you need the `$code` command.__
+
+There is a known bug: The `$code` command does not work. If you know how to fix it, create a pull request. If you find another bug, [create an issue](https://github.com/MrAuro/Among-Us-Bot/issues/new/choose)
 
 There may be an issue with the `start.bat` and `run.bat`. It was not tested thoroughly.
 
