@@ -22,5 +22,8 @@
     },
     {
         "command": "dead", "usage": "`$dead` or `$d`\nUnmutes and undeafens you. Use this if you are dead and want to talk to other dead players."
+    },
+    {
+        "command": "overlay", "usage": "`$overlay`\nGenerates an overlay for OBS for the voice channel you are currently in. Use a browser capture."
     }
 ]
