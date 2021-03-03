@@ -6,3 +6,6 @@
 ```
 TOKEN=discord token
 ```
+
+temp:
+`https://discord.com/oauth2/authorize?client_id=***********&scope=bot&permissions=2144861680`
