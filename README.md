@@ -1,4 +1,11 @@
-# Among-Us-Bot
-An Among Us Bot built in Discord.JS to help users find a game.
+# Among Us Bot
+ 
+ Currently in development | If you want to run this for yourself, create a .env file:
+`.env`:
 
-## All development is currently on the `v2` branch, and when v2 is done it will be public
+```
+TOKEN=discord token
+```
+
+temp:
+`https://discord.com/oauth2/authorize?client_id=***********&scope=bot&permissions=2144861680`
