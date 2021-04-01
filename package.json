@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/MrAuro/Among-Us-Bot#readme",
   "dependencies": {
-    "discord.js": "^12.3.1",
+    "discord.js": "^12.5.2",
     "dotenv": "^8.2.0",
     "nedb": "^1.8.0",
     "node-cmd": "^3.0.0"
